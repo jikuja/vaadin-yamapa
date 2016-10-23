@@ -12967,3 +12967,10 @@ div.v-layout.v-horizontal.v-widget {
 	width: 19px;
 	overflow: hidden;
 }
+
+.mytheme .mapwindow .locatebutton {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	z-index: 9999;
+}
