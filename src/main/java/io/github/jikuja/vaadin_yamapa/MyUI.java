@@ -13,6 +13,8 @@ import io.github.jikuja.vaadin_yamapa.ui.Menu;
 import io.github.jikuja.vaadin_yamapa.ui.PoiList;
 import io.github.jikuja.vaadin_yamapa.ui.PoiMap;
 
+import java.util.logging.Logger;
+
 /**
  * This UI is the application entry point. A UI may either represent a browser window 
  * (or tab) or some part of a html page where a Vaadin application is embedded.
@@ -22,10 +24,7 @@ import io.github.jikuja.vaadin_yamapa.ui.PoiMap;
  */
 @Theme("mytheme")
 public class MyUI extends UI {
-    @Override
-    public Navigator getNavigator() {
-        return navigator;
-    }
+    private final static Logger logger = Logger.getLogger(MyUI.class.getName());
 
     private Navigator navigator;
     private Panel contentPanel;
@@ -43,7 +42,7 @@ public class MyUI extends UI {
         navigator.navigateTo("about");
 
         layout.setSizeFull();
-        layout.addComponent(new Menu());
+        layout.addComponent(new Menu(this));
 
         layout.addComponent(contentPanel);
         contentPanel.setSizeFull();
@@ -52,7 +51,9 @@ public class MyUI extends UI {
         setContent(layout);
     }
 
-
+    public Navigator getNav() {
+        return navigator;
+    }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
