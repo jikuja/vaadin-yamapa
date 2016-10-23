@@ -5,10 +5,8 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Notification;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import io.github.jikuja.vaadin_yamapa.database.Containers;
 import io.github.jikuja.vaadin_yamapa.database.Database;
@@ -26,6 +24,7 @@ import java.util.logging.Logger;
 
 public class PoiMap extends CssLayout implements View {
     private static Logger logger = Logger.getLogger(PoiMap.class.getName());
+    public static final String NAME = "map";
     private final LMap map = new LMap();
     private final Button locate = new Button("");
 
@@ -55,8 +54,14 @@ public class PoiMap extends CssLayout implements View {
         // ContextClickEvent does not provide geographical coordinates
         map.addClickListener(event -> {
             if (event.getSource() == map) {
-                logger.info("map: Click listener: " + event.getPoint());
-                Notification.show("Thanks for tapping. Not implemented yet");
+                logger.info("map: Click listener: " + event.getPoint() + event.getMouseEvent().getButtonName());
+                final Window window = new Window("New POI");
+                window.setContent(new PoiForm(event.getPoint().getLat(), event.getPoint().getLon()));
+                window.setSizeUndefined();
+                window.center();
+                window.setModal(true);
+                window.setResizable(false);
+                UI.getCurrent().addWindow(window);
             }
         });
     }

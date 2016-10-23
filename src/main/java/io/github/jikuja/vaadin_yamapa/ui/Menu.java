@@ -21,8 +21,8 @@ public class Menu extends CssLayout {
     }
 
     private void setupButtons() {
-        map.addClickListener(event -> ui.getNav().navigateTo("map"));
-        list.addClickListener(event -> ui.getNav().navigateTo("list"));
-        about.addClickListener(event -> ui.getNav().navigateTo("about"));
+        map.addClickListener(event -> ui.getNav().navigateTo(PoiMap.NAME));
+        list.addClickListener(event -> ui.getNav().navigateTo(PoiList.NAME));
+        about.addClickListener(event -> ui.getNav().navigateTo(About.NAME));
     }
 }

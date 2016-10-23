@@ -5,13 +5,11 @@ import javax.servlet.annotation.WebServlet;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.*;
-import io.github.jikuja.vaadin_yamapa.ui.About;
-import io.github.jikuja.vaadin_yamapa.ui.Menu;
-import io.github.jikuja.vaadin_yamapa.ui.PoiList;
-import io.github.jikuja.vaadin_yamapa.ui.PoiMap;
+import io.github.jikuja.vaadin_yamapa.ui.*;
 
 import java.util.logging.Logger;
 
@@ -36,10 +34,11 @@ public class MyUI extends UI {
         contentPanel.setContent(new Label("asdf"));
 
         navigator = new Navigator(this, contentPanel);
-        navigator.addView("map", PoiMap.class);
-        navigator.addView("list", PoiList.class);
-        navigator.addView("about", About.class);
-        navigator.navigateTo("about");
+        navigator.addView(PoiMap.NAME, PoiMap.class);
+        navigator.addView(PoiList.NAME, PoiList.class);
+        navigator.addView(About.NAME, About.class);
+        navigator.setErrorView(ErrorView.class);
+
 
         layout.setSizeFull();
         layout.addComponent(new Menu(this));
