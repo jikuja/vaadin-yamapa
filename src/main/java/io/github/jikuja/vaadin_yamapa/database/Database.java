@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+ * TODO: clean error handleing with try-with-resources or by using methods to close resultset/statements
+ */
 public class Database {
     private static Database instance;
 
@@ -152,6 +155,7 @@ public class Database {
         } catch (SQLException e) {
             sqlException = e;
         } finally {
+            // note(QA): Do not connection.close() unless you want bugs!
             try {
                 pool.releaseConnection(connection);
             } catch (Exception e) {
