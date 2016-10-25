@@ -48,6 +48,11 @@ public class PoiMap extends CssLayout implements View {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        items.addItemSetChangeListener(event -> {
+            // TODO: make this to ignore temporary rows
+            UI.getCurrent().access(this::updateMarks);
+        });
     }
 
     private void setupClickHandlers() {
@@ -55,16 +60,9 @@ public class PoiMap extends CssLayout implements View {
         map.addClickListener(event -> {
             if (event.getSource() == map) {
                 logger.info("map: Click listener: " + event.getPoint() + event.getMouseEvent().getButtonName());
-                final Window window = new Window("New POI");
-                PoiForm form = new PoiForm();
-                form.setItem(items.getItem(items.addItem()));
-                form.setCoordinates(event.getPoint().getLat(), event.getPoint().getLon());
-                window.setContent(form);
-                window.setSizeUndefined();
-                window.center();
-                window.setModal(true);
-                window.setResizable(false);
-                UI.getCurrent().addWindow(window);
+                PoiForm form = new PoiForm("New POI?", items, items.getItem(items.addItem()),
+                        event.getPoint().getLat(), event.getPoint().getLon());
+                UI.getCurrent().addWindow(form);
             }
         });
     }
@@ -129,6 +127,11 @@ public class PoiMap extends CssLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
+        deleteMarks();
+        addMarks();
+    }
+
+    private void updateMarks() {
         deleteMarks();
         addMarks();
     }
