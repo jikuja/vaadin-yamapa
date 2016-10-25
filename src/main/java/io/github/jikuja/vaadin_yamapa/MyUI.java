@@ -34,6 +34,7 @@ public class MyUI extends UI {
         contentPanel.setContent(new Label("asdf"));
 
         navigator = new Navigator(this, contentPanel);
+        navigator.addView("", Front.class);
         navigator.addView(PoiMap.NAME, PoiMap.class);
         navigator.addView(PoiList.NAME, PoiList.class);
         navigator.addView(About.NAME, About.class);
@@ -48,6 +49,9 @@ public class MyUI extends UI {
         layout.setExpandRatio(contentPanel, 1);
 
         setContent(layout);
+
+        // TODO: temp hack
+        getSession().setAttribute("userid", 0);
     }
 
     public Navigator getNav() {

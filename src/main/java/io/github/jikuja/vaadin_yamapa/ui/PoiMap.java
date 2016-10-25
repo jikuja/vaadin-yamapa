@@ -56,7 +56,10 @@ public class PoiMap extends CssLayout implements View {
             if (event.getSource() == map) {
                 logger.info("map: Click listener: " + event.getPoint() + event.getMouseEvent().getButtonName());
                 final Window window = new Window("New POI");
-                window.setContent(new PoiForm(event.getPoint().getLat(), event.getPoint().getLon()));
+                PoiForm form = new PoiForm();
+                form.setItem(items.getItem(items.addItem()));
+                form.setCoordinates(event.getPoint().getLat(), event.getPoint().getLon());
+                window.setContent(form);
                 window.setSizeUndefined();
                 window.center();
                 window.setModal(true);
