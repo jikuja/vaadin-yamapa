@@ -10,6 +10,8 @@ import io.github.jikuja.vaadin_yamapa.database.Containers;
 import io.github.jikuja.vaadin_yamapa.database.Database;
 
 import javax.xml.crypto.Data;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -93,8 +95,8 @@ public class PoiForm extends Window {
     }
 
     private void setupFields() {
-        lat.setConverter(new StringToDoubleConverter());
-        lon.setConverter(new StringToDoubleConverter());
+        lat.setConverter(new AccurateStringToDoubleConverter());
+        lon.setConverter(new AccurateStringToDoubleConverter());
     }
 
     private void setupButtonHandlers() {
@@ -134,5 +136,16 @@ public class PoiForm extends Window {
 
     public void setContainer(SQLContainer container) {
         this.container = container;
+    }
+
+    // Five deciman presentation has accurace of 1.1 meters
+    private static class AccurateStringToDoubleConverter extends StringToDoubleConverter {
+        @Override
+        protected NumberFormat getFormat(Locale locale) {
+            NumberFormat format = super.getFormat(locale);
+            format.setMinimumFractionDigits(5);
+            format.setMaximumFractionDigits(5);
+            return format;
+        }
     }
 }
