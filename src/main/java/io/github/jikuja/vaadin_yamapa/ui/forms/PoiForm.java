@@ -31,7 +31,8 @@ import java.util.logging.Logger;
  */
 public class PoiForm extends Window {
     private final static Logger logger = Logger.getLogger(FormLayout.class.getName());
-    private FormLayout layout = new FormLayout();
+    private final FormLayout layout = new FormLayout();
+    private final CssLayout buttons = new CssLayout();
     
     @PropertyId("TITLE")
     private final TextField title = new TextField("Title");
@@ -45,9 +46,11 @@ public class PoiForm extends Window {
 
     private final Button save = new Button("Save");
     private final Button cancel = new Button("Cancel");
+    private final Button delete = new Button("Delete");
 
     private final FieldGroup fieldGroup = new FieldGroup();
     private SQLContainer container;
+    private Object itemId;
 
 
     /**
@@ -68,14 +71,26 @@ public class PoiForm extends Window {
      *
      * @param caption Window title to show user
      * @param container Related contained for database access
-     * @param item Related item for form field bindings
+     * @param itemId ItemId for related item for form field bindings
      */
-    public PoiForm(String caption, SQLContainer container, Item item) {
+    public PoiForm(String caption, SQLContainer container, Object itemId, boolean canDelete, boolean canEdit) {
         this();
         this.setCaption(caption);
         this.container = container;
-        this.fieldGroup.setItemDataSource(item);
+        this.itemId = itemId;
+        this.fieldGroup.setItemDataSource(container.getItem(itemId));
         this.fieldGroup.bindMemberFields(this);
+        if (canDelete) { //
+            // editing old item. Make delete button visible
+            delete.setVisible(true);
+        }
+
+        if (!canEdit) {
+            layout.setReadOnly(true);
+            layout.setEnabled(false);
+            buttons.setVisible(false);
+            setClosable(true);
+        }
     }
 
     /**
@@ -86,12 +101,12 @@ public class PoiForm extends Window {
      *
      * @param caption Window title to show user
      * @param container Related contained for database access
-     * @param item Related item for form field bindings
+     * @param itemId  ItemId for related item for form field bindings
      * @param lat Latitude to use as coordinate
      * @param lon Lognitude to use as coordinate
      */
-    public PoiForm(String caption, SQLContainer container, Item item, double lat, double lon) {
-        this(caption, container, item);
+    public PoiForm(String caption, SQLContainer container, Object itemId, double lat, double lon) {
+        this(caption, container, itemId, false, true);
         this.setCoordinates(lat, lon);
     }
 
@@ -138,8 +153,8 @@ public class PoiForm extends Window {
         title.focus();
 
         // buttons
-        CssLayout buttons = new CssLayout();
-        buttons.addComponents(save, cancel);
+        buttons.addComponents(save, cancel, delete);
+        delete.setVisible(false);   // not shown by default
         layout.addComponent(buttons);
     }
 
@@ -167,6 +182,16 @@ public class PoiForm extends Window {
 
         // BUG?
         cancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
+
+        delete.addClickListener(event -> {
+            container.removeItem(itemId);
+            try {
+                container.commit();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "failed: ", e);
+            }
+            close();
+        });
     }
 
     @SuppressWarnings("unchecked") // I know that type of the properties are Double

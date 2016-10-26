@@ -6,6 +6,7 @@ import com.vaadin.data.util.sqlcontainer.TemporaryRowId;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import io.github.jikuja.vaadin_yamapa.database.Containers;
@@ -20,6 +21,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 
@@ -60,8 +62,8 @@ public class PoiMap extends CssLayout implements View {
         // ContextClickEvent does not provide geographical coordinates
         map.addClickListener(event -> {
             if (event.getSource() == map) {
-                logger.info("map: Click listener: " + event.getPoint() + event.getMouseEvent().getButtonName());
-                PoiForm form = new PoiForm("New POI?", items, items.getItem(items.addItem()),
+                Object iid = items.addItem();
+                PoiForm form = new PoiForm("New POI?", items, iid,
                         event.getPoint().getLat(), event.getPoint().getLon());
                 UI.getCurrent().addWindow(form);
             }
@@ -172,6 +174,15 @@ public class PoiMap extends CssLayout implements View {
                 double lon = (Double) item.getItemProperty("LONG").getValue();
 
                 LMarker marker = new LMarker(lat, lon);
+                marker.addClickListener(event -> {
+                    PoiForm form;
+                    if (Objects.equals((Integer) (VaadinSession.getCurrent().getAttribute("userid")), (Integer) (item.getItemProperty("USER_ID").getValue()))) {
+                        form = new PoiForm("Edit POI", items, iid, true, true);
+                    } else {
+                        form = new PoiForm("POI Details", items, iid, false, false);
+                    }
+                    UI.getCurrent().addWindow(form);
+                });
                 map.addComponent(marker);
             }
         }
