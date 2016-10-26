@@ -5,6 +5,7 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.*;
 import io.github.jikuja.vaadin_yamapa.database.Containers;
 import io.github.jikuja.vaadin_yamapa.database.Database;
@@ -131,6 +132,11 @@ public class PoiForm extends Window {
         lat.setConverter(new AccurateStringToDoubleConverter());
         lon.setConverter(new AccurateStringToDoubleConverter());
 
+        // TODO: setup validators
+
+        // move cursor to first field of the form
+        title.focus();
+
         // buttons
         CssLayout buttons = new CssLayout();
         buttons.addComponents(save, cancel);
@@ -158,6 +164,9 @@ public class PoiForm extends Window {
             }
             close();
         });
+
+        // BUG?
+        cancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
     }
 
     @SuppressWarnings("unchecked") // I know that type of the properties are Double
