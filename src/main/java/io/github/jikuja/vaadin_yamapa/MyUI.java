@@ -5,11 +5,11 @@ import javax.servlet.annotation.WebServlet;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
-import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.*;
-import io.github.jikuja.vaadin_yamapa.ui.*;
+import io.github.jikuja.vaadin_yamapa.ui.Menu;
+import io.github.jikuja.vaadin_yamapa.ui.views.*;
 
 import java.util.logging.Logger;
 

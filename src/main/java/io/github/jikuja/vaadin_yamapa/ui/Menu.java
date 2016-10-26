@@ -3,6 +3,9 @@ package io.github.jikuja.vaadin_yamapa.ui;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import io.github.jikuja.vaadin_yamapa.MyUI;
+import io.github.jikuja.vaadin_yamapa.ui.views.About;
+import io.github.jikuja.vaadin_yamapa.ui.views.PoiList;
+import io.github.jikuja.vaadin_yamapa.ui.views.PoiMap;
 
 public class Menu extends CssLayout {
     private Button map = new Button("Map");

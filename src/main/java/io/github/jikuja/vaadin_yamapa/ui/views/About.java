@@ -1,4 +1,4 @@
-package io.github.jikuja.vaadin_yamapa.ui;
+package io.github.jikuja.vaadin_yamapa.ui.views;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;

@@ -1,15 +1,15 @@
-package io.github.jikuja.vaadin_yamapa.ui;
+package io.github.jikuja.vaadin_yamapa.ui.views;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import io.github.jikuja.vaadin_yamapa.database.Containers;
 import io.github.jikuja.vaadin_yamapa.database.Database;
+import io.github.jikuja.vaadin_yamapa.ui.forms.PoiForm;
 import org.vaadin.addon.leaflet.*;
 import org.vaadin.addon.leaflet.control.LScale;
 import org.vaadin.addon.leaflet.shared.ControlPosition;

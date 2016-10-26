@@ -1,14 +1,13 @@
-package io.github.jikuja.vaadin_yamapa.ui;
+package io.github.jikuja.vaadin_yamapa.ui.views;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 
-public class Front extends CssLayout implements View {
-    public Front() {
-        Label about = new Label("Front");
-        addComponent(about);
+public class ErrorView extends CssLayout implements View {
+    public ErrorView() {
+        addComponent(new Label("Subpage does not exist!"));
     }
 
     @Override

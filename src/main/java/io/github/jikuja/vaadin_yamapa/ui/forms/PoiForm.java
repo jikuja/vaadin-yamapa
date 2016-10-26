@@ -1,4 +1,4 @@
-package io.github.jikuja.vaadin_yamapa.ui;
+package io.github.jikuja.vaadin_yamapa.ui.forms;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.fieldgroup.FieldGroup;
