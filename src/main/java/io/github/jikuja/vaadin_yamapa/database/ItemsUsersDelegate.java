@@ -125,8 +125,8 @@ public  class ItemsUsersDelegate implements FreeformStatementDelegate {
     @Override
     public boolean removeRow(Connection conn, RowItem row) throws UnsupportedOperationException, SQLException {
         // Note: no locking support
-        PreparedStatement statement = conn.prepareStatement("DELETE FROM users WHERE ID=?");
-        statement.setInt(1, (Integer)row.getItemProperty("id").getValue()); // fixme id or ID
+        PreparedStatement statement = conn.prepareStatement("DELETE FROM ITEMS WHERE ID=?");
+        statement.setInt(1, (Integer)row.getItemProperty("ID").getValue()); // fixme id or ID
         int retval = statement.executeUpdate();
         statement.close();
         return retval == 1;

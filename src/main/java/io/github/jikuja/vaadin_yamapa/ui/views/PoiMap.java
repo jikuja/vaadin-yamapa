@@ -176,7 +176,7 @@ public class PoiMap extends CssLayout implements View {
                 LMarker marker = new LMarker(lat, lon);
                 marker.addClickListener(event -> {
                     PoiForm form;
-                    if (Objects.equals((Integer) (VaadinSession.getCurrent().getAttribute("userid")), (Integer) (item.getItemProperty("USER_ID").getValue()))) {
+                    if (Objects.equals(VaadinSession.getCurrent().getAttribute("userid"), item.getItemProperty("USER_ID").getValue())) {
                         form = new PoiForm("Edit POI", items, iid, true, true);
                     } else {
                         form = new PoiForm("POI Details", items, iid, false, false);

@@ -4,11 +4,19 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
 import io.github.jikuja.vaadin_yamapa.database.Containers;
 import io.github.jikuja.vaadin_yamapa.database.Database;
+import io.github.jikuja.vaadin_yamapa.ui.forms.PoiForm;
+
+import java.sql.SQLException;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PoiList extends CssLayout implements View {
+    private static Logger logger = Logger.getLogger(PoiList.class.getName());
     public static final String NAME = "list";
 
     private SQLContainer container;
@@ -61,16 +69,32 @@ public class PoiList extends CssLayout implements View {
         // TODO: check if tables updated and redraw?
     }
 
-    private static class PoiDetailsGenerator implements Grid.DetailsGenerator {
+    private class PoiDetailsGenerator implements Grid.DetailsGenerator {
         @Override
         public Component getDetails(Grid.RowReference rowReference) {
+            HorizontalLayout layout = new HorizontalLayout();
+
             Item item = rowReference.getItem();
             Label label = new Label((String)item.getItemProperty("DESCRIPTION").getValue());
-            Button edit = new Button("Edit");
-            Button delete = new Button("Delete");
+            layout.addComponent(label);
 
-            HorizontalLayout layout = new HorizontalLayout();
-            layout.addComponents(label, edit, delete);
+
+            if (Objects.equals(VaadinSession.getCurrent().getAttribute("userid"), item.getItemProperty("USER_ID").getValue())) {
+                Button edit = new Button("Edit", event -> {
+                    UI.getCurrent().addWindow(new PoiForm("Edit POI", container, rowReference.getItemId(), true, true));
+                });
+                Button delete = new Button("Delete", event -> {
+                    container.removeItem(rowReference.getItemId());
+                    try {
+                        container.commit();
+                    } catch (SQLException e) {
+                        logger.log(Level.SEVERE, "failed: ", e);
+                    }
+                    grid.setEditorEnabled(true);
+                    grid.setEditorEnabled(false);
+                });
+                layout.addComponents(edit, delete);
+            }
 
             return layout;
         }
