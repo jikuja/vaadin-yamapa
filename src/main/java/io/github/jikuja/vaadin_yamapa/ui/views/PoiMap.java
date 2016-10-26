@@ -2,6 +2,7 @@ package io.github.jikuja.vaadin_yamapa.ui.views;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
+import com.vaadin.data.util.sqlcontainer.TemporaryRowId;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
@@ -46,11 +47,11 @@ public class PoiMap extends CssLayout implements View {
             items = Containers.getItems(Database.getInstance().getPool());
             users = Containers.getUsers(Database.getInstance().getPool());
         } catch (SQLException e) {
+            // just fail
             throw new RuntimeException(e);
         }
 
         items.addItemSetChangeListener(event -> {
-            // TODO: make this to ignore temporary rows
             UI.getCurrent().access(this::updateMarks);
         });
     }
@@ -86,6 +87,7 @@ public class PoiMap extends CssLayout implements View {
         map.setCenter(new Point(60.440963, 22.25122), 14.0);
 
         // single click / tapping is used to add POIs
+        // using context meny would be even nicer thing to have. Maybe later
         map.setDoubleClickZoomEnabled(false);
     }
 
@@ -154,12 +156,24 @@ public class PoiMap extends CssLayout implements View {
 
     private void addMarks() {
         for (Object iid: items.getItemIds()) {
-            Item item = items.getItem(iid);
-            double lat = (Double) item.getItemProperty("LAT").getValue();
-            double lon = (Double) item.getItemProperty("LONG").getValue();
+            if (iid instanceof TemporaryRowId) {
+                Item item = items.getItem(iid);
+                double lat = (Double) item.getItemProperty("LAT").getValue();
+                double lon = (Double) item.getItemProperty("LONG").getValue();
 
-            LMarker marker = new LMarker(lat, lon);
-            map.addComponent(marker);
+                LMarker marker = new LMarker(lat, lon);
+                marker.setTitle("New POI being created here");
+                //TODO: make temporary markers to use different color or find out better icon
+                marker.setIcon(FontAwesome.BRIEFCASE);
+                map.addComponent(marker);
+            } else {
+                Item item = items.getItem(iid);
+                double lat = (Double) item.getItemProperty("LAT").getValue();
+                double lon = (Double) item.getItemProperty("LONG").getValue();
+
+                LMarker marker = new LMarker(lat, lon);
+                map.addComponent(marker);
+            }
         }
     }
 }
