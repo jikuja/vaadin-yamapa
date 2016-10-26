@@ -1,5 +1,6 @@
 package io.github.jikuja.vaadin_yamapa.ui;
 
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import io.github.jikuja.vaadin_yamapa.MyUI;
@@ -17,6 +18,7 @@ public class Menu extends CssLayout {
 
     public Menu(MyUI ui) {
         this.ui = ui;
+        addStyleName("css-menu");
         setHeight(100, Unit.PERCENTAGE);
         addComponents(map, list, login, logout, about);
 
@@ -27,5 +29,11 @@ public class Menu extends CssLayout {
         map.addClickListener(event -> ui.getNav().navigateTo(PoiMap.NAME));
         list.addClickListener(event -> ui.getNav().navigateTo(PoiList.NAME));
         about.addClickListener(event -> ui.getNav().navigateTo(About.NAME));
+
+        map.setIcon(FontAwesome.MAP);
+        list.setIcon(FontAwesome.LIST);
+        login.setIcon(FontAwesome.SIGN_IN);
+        logout.setIcon(FontAwesome.SIGN_OUT);
+        about.setIcon(FontAwesome.INFO_CIRCLE);
     }
 }

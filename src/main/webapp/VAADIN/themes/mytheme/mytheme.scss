@@ -35,14 +35,23 @@
   @include valo;
 
   // Insert your own theme rules here
-  .mapwindow .locatebutton {
+  .main .mapwindow .locatebutton {
     position: absolute;
     bottom: 10px;
     left: 10px;
     z-index: 9999;
   }
 
-  .locatebutton .v-icon {
-    //font-size: 55px;
+  .main .css-menu {
+    .v-button {
+        display: block;
+        text-align: left;
+    }
+  }
+
+  .main[width-range~="0-600px"] {
+    .css-menu .v-button-caption {
+        display: none;
+    }
   }
 }

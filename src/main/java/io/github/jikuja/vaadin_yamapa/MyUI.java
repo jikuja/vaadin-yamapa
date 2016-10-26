@@ -5,6 +5,7 @@ import javax.servlet.annotation.WebServlet;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.*;
@@ -49,6 +50,8 @@ public class MyUI extends UI {
         layout.setExpandRatio(contentPanel, 1);
 
         setContent(layout);
+        layout.setResponsive(true);
+        layout.addStyleName("main");
 
         // TODO: temp hack
         getSession().setAttribute("userid", 0);
