@@ -7,6 +7,7 @@ import com.vaadin.data.util.sqlcontainer.query.FreeformStatementDelegate;
 import com.vaadin.data.util.sqlcontainer.query.OrderBy;
 import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 import com.vaadin.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
+import com.vaadin.shared.annotations.Delayed;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -69,11 +70,13 @@ public  class ItemsUsersDelegate implements FreeformStatementDelegate {
 
     // FreeformQueryDelegate
     @Override
+    @Deprecated
     public String getQueryString(int offset, int limit) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Deprecated method");
     }
 
     @Override
+    @Deprecated
     public String getCountQuery() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Deprecated method");
     }
@@ -130,6 +133,7 @@ public  class ItemsUsersDelegate implements FreeformStatementDelegate {
     }
 
     @Override
+    @Deprecated
     public String getContainsRowQueryString(Object... keys) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Deprecated method");
     }
