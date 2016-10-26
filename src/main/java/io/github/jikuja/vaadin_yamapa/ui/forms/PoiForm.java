@@ -10,6 +10,7 @@ import io.github.jikuja.vaadin_yamapa.database.Containers;
 import io.github.jikuja.vaadin_yamapa.database.Database;
 
 import javax.xml.crypto.Data;
+import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -45,67 +46,103 @@ public class PoiForm extends Window {
     private final Button cancel = new Button("Cancel");
 
     private final FieldGroup fieldGroup = new FieldGroup();
-    private Item item;
     private SQLContainer container;
 
 
+    /**
+     * for internal use only
+     *
+     * some of the fields are properly initialized in other constructors
+     */
     private PoiForm() {
+        setupWindow();
         setupForm();
         setupButtonHandlers();
-        setupFields();
-        setupWindow();
     }
 
-    /*
-     * use case: POI with filled item
+    /**
+     * New Window with POI Form
+     *
+     * Fills form with data from given item object or displays default input prompts
+     *
+     * @param caption Window title to show user
+     * @param container Related contained for database access
+     * @param item Related item for form field bindings
      */
     public PoiForm(String caption, SQLContainer container, Item item) {
         this();
-        setCaption(caption);
+        this.setCaption(caption);
         this.container = container;
-        setItem(item);
+        this.fieldGroup.setItemDataSource(item);
+        this.fieldGroup.bindMemberFields(this);
     }
 
-    /*
-     * use case: new POI with given coordinates
+    /**
+     * New Window with POI form
+     *
+     * Fills coordinateswith given values. Rest of the form is filled with with data from item object or
+     * displays default input prompts
+     *
+     * @param caption Window title to show user
+     * @param container Related contained for database access
+     * @param item Related item for form field bindings
+     * @param lat Latitude to use as coordinate
+     * @param lon Lognitude to use as coordinate
      */
     public PoiForm(String caption, SQLContainer container, Item item, double lat, double lon) {
-        this();
-        setCaption(caption);
-        this.container = container;
-        setItem(item);
-        setCoordinates(lat, lon);
+        this(caption, container, item);
+        this.setCoordinates(lat, lon);
     }
 
-    private void setupForm() {
-        layout.setSizeUndefined();
-        layout.setMargin(true);
-        layout.addComponents(title, description, lat, lon);
-        CssLayout buttons = new CssLayout();
-        buttons.addComponents(save, cancel);
-        layout.addComponent(buttons);
-        setContent(layout);
-    }
-
+    /**
+     * Setup Window related settings. (Top component of the class)
+     */
     private void setupWindow() {
         setSizeUndefined();
         center();
         setModal(true);
         setResizable(false);
+        setClosable(false);
+        setContent(layout);
     }
 
-    private void setupFields() {
+    /**
+     * Setup Formlayer, add fields, configure visible default values for fields
+     */
+    private void setupForm() {
+        layout.setSizeUndefined();
+
+        // fields
+        layout.setMargin(true);
+        layout.addComponents(title, description, lat, lon);
+
+        // Why my item has null objects even my database schema has "DEFAULT '' NOT NULL"?
+        // TODO: QA: Did I derp?
+        title.setNullRepresentation("");
+        description.setNullRepresentation("");
+
+        // visible default field values
+        title.setInputPrompt("Add Title");
+        description.setInputPrompt("Add description");
+        lat.setInputPrompt("Add latitude");
+        lon.setInputPrompt("Add lognitude");
+
+        // setup converters for fields
         lat.setConverter(new AccurateStringToDoubleConverter());
         lon.setConverter(new AccurateStringToDoubleConverter());
+
+        // buttons
+        CssLayout buttons = new CssLayout();
+        buttons.addComponents(save, cancel);
+        layout.addComponent(buttons);
     }
 
     private void setupButtonHandlers() {
         save.addClickListener(event -> {
             try {
+                // TODO: QA: Do I really need to call both commit()s?
                 fieldGroup.commit();
                 container.commit();
-                // TODO: make this to reload POI marks in the map
-                // partially done for MAP!
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "failed: ", e);
             }
@@ -113,32 +150,24 @@ public class PoiForm extends Window {
         });
         
         cancel.addClickListener(event -> {
+            fieldGroup.discard();
+            try {
+                container.rollback();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "failed: ", e);
+            }
             close();
         });
     }
 
-    private void setItem(Item item) {
-        if (fieldGroup.getItemDataSource() != item) {
-            this.item = item;
-            fieldGroup.discard();
-            fieldGroup.setItemDataSource(item);
-            fieldGroup.bindMemberFields(this);
-        }
-    }
-
+    @SuppressWarnings("unchecked") // I know that type of the properties are Double
     private void setCoordinates(double lat, double lon) {
-        if (item != null) {
-            item.getItemProperty("LAT").setValue(lat);
-            item.getItemProperty("LONG").setValue(lon);
-        }
+        fieldGroup.getItemDataSource().getItemProperty("LAT").setValue(lat);
+        fieldGroup.getItemDataSource().getItemProperty("LONG").setValue(lon);
     }
 
-
-    public void setContainer(SQLContainer container) {
-        this.container = container;
-    }
-
-    // Five deciman presentation has accurace of 1.1 meters
+    // Five decimal presentation gives accuracy of ~1.1 meters
+    // Default was three(~110 meters)
     private static class AccurateStringToDoubleConverter extends StringToDoubleConverter {
         @Override
         protected NumberFormat getFormat(Locale locale) {
