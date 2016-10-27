@@ -58,6 +58,7 @@ public class Auth {
         VaadinSession session = VaadinSession.getCurrent();
         session.setAttribute("userid", null);
         session.setAttribute("name", null);
+        //session.getSession().invalidate(); // idk if needed
         return true;
     }
 }

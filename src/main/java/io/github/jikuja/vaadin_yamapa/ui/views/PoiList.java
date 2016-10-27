@@ -52,6 +52,7 @@ public class PoiList extends CssLayout implements View {
         grid.getColumn("OAUTH").setHidden(true);
         grid.getColumn("PASSWORD").setHidden(true); //TODO: does this leak pass words to client?
         // probably better to exclude password field from requests
+        grid.getColumn("EXTERNAL_ID").setHidden(true);
 
         // setup grid details
         grid.setDetailsGenerator(new PoiDetailsGenerator());

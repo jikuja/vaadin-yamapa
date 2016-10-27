@@ -5,6 +5,7 @@ import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
 
 import java.sql.SQLException;
@@ -91,6 +92,7 @@ public class PoiForm extends Window {
     public PoiForm(String caption, SQLContainer container, Object itemId, double lat, double lon) {
         this(caption, container, itemId, false, true);
         this.setCoordinates(lat, lon);
+        this.setUserId();
     }
 
     /**
@@ -180,10 +182,15 @@ public class PoiForm extends Window {
         });
     }
 
-    @SuppressWarnings("unchecked") // I know that type of the properties are Double
+    @SuppressWarnings("unchecked") // Double to Double
     private void setCoordinates(double lat, double lon) {
         fieldGroup.getItemDataSource().getItemProperty("LAT").setValue(lat);
         fieldGroup.getItemDataSource().getItemProperty("LONG").setValue(lon);
+    }
+
+    @SuppressWarnings("unchecked") // String to string
+    private void setUserId() {
+        fieldGroup.getItemDataSource().getItemProperty("USER_ID").setValue(VaadinSession.getCurrent().getAttribute("userid"));
     }
 
     /**

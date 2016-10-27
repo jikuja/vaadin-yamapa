@@ -60,7 +60,7 @@ public class PoiMap extends CssLayout implements View {
 
     private void setupClickHandlers() {
         map.addClickListener(event -> {
-            if (event.getSource() == map) {
+            if (event.getSource() == map && VaadinSession.getCurrent().getAttribute("userid") != null) {
                 Object iid = items.addItem();
                 PoiForm form = new PoiForm("New POI", items, iid,
                         event.getPoint().getLat(), event.getPoint().getLon());
