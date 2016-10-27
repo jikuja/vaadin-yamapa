@@ -30,7 +30,7 @@ public class Containers {
     }
 
     public static SQLContainer getUsers(JDBCConnectionPool pool) throws SQLException {
-        TableQuery query = new TableQuery("items", pool);
+        TableQuery query = new TableQuery("users", pool);
         query.setVersionColumn("OPTLOCK");
         SQLContainer sqlContainer = new SQLContainer(query);
         return sqlContainer;
