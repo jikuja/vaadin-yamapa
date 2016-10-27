@@ -1,34 +1,18 @@
 package io.github.jikuja.vaadin_yamapa.ui.forms;
 
-import com.vaadin.data.Item;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.*;
-import io.github.jikuja.vaadin_yamapa.database.Containers;
-import io.github.jikuja.vaadin_yamapa.database.Database;
 
-import javax.xml.crypto.Data;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/*
- * Form for POI creation
- * User interacts with map and from is shown
- * Coordinates prefilled by callee
- *
- * This Form Windows really should be reusable:
- * * New POI from map => marker update
- * * POI edit from map
- * * new POI from list with current location => List View update
- * * POI edit from the list => List View update
- *
- */
 public class PoiForm extends Window {
     private final static Logger logger = Logger.getLogger(FormLayout.class.getName());
     private final FormLayout layout = new FormLayout();
@@ -42,7 +26,6 @@ public class PoiForm extends Window {
     private final TextField lat = new TextField("Latitude");
     @PropertyId("LONG")
     private final TextField lon = new TextField("Longitude");
-
 
     private final Button save = new Button("Save");
     private final Button cancel = new Button("Cancel");
@@ -158,6 +141,9 @@ public class PoiForm extends Window {
         layout.addComponent(buttons);
     }
 
+    /**
+     * Setup click listeners for buttons
+     */
     private void setupButtonHandlers() {
         save.addClickListener(event -> {
             try {
@@ -180,7 +166,7 @@ public class PoiForm extends Window {
             close();
         });
 
-        // BUG?
+        // BUG? This does not work, why?
         cancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 
         delete.addClickListener(event -> {
@@ -200,8 +186,9 @@ public class PoiForm extends Window {
         fieldGroup.getItemDataSource().getItemProperty("LONG").setValue(lon);
     }
 
-    // Five decimal presentation gives accuracy of ~1.1 meters
-    // Default was three(~110 meters)
+    /**
+     * Converter from String to Double. Conversion uses 5 decimal precision => 1.1 meters
+     */
     private static class AccurateStringToDoubleConverter extends StringToDoubleConverter {
         @Override
         protected NumberFormat getFormat(Locale locale) {

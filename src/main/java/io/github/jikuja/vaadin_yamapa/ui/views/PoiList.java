@@ -43,21 +43,21 @@ public class PoiList extends CssLayout implements View {
         // setup grid headers
         grid.getColumn("ID").setHidden(true);
         grid.getColumn("TITLE").setHeaderCaption("Title");
-        // TODO: insert description into details
-        // ref: https://vaadin.com/api/7.7.3/com/vaadin/ui/Grid.html#setDetailsGenerator-com.vaadin.ui.Grid.DetailsGenerator-
-        // same area should contain add and delete buttons
-        //grid.getColumn("DESCRIPTION").setHeaderCaption("Description");
         grid.getColumn("DESCRIPTION").setHidden(true);
         grid.getColumn("OPTLOCK").setHidden(true);
         grid.getColumn("USER_ID").setHidden(true);
         grid.getColumn("LAT").setHeaderCaption("Latitude");
         grid.getColumn("LONG").setHeaderCaption("Longitude");
         grid.getColumn("NAME").setHeaderCaption("Added by");
+        grid.getColumn("OAUTH").setHidden(true);
+        grid.getColumn("PASSWORD").setHidden(true); //TODO: does this leak pass words to client?
+        // probably better to exclude password field from requests
 
+        // setup grid details
         grid.setDetailsGenerator(new PoiDetailsGenerator());
         grid.setSelectionMode(Grid.SelectionMode.NONE);
 
-        // I remember seeing an example which did not add listener for detail, can't find it
+        // setup click handler for grid details
         grid.addItemClickListener(event -> {
             Object id = event.getItemId();
             grid.setDetailsVisible(id, !grid.isDetailsVisible(id));

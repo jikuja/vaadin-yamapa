@@ -7,7 +7,8 @@ import com.vaadin.ui.Label;
 
 public class ErrorView extends CssLayout implements View {
     public ErrorView() {
-        addComponent(new Label("Subpage does not exist!"));
+        Label label = new Label("Subpage does not exist!");
+        addComponent(label);
     }
 
     @Override

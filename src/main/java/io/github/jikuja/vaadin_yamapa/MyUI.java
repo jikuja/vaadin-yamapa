@@ -6,7 +6,6 @@ import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
-import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.*;
@@ -15,20 +14,12 @@ import io.github.jikuja.vaadin_yamapa.ui.views.*;
 
 import java.util.logging.Logger;
 
-/**
- * This UI is the application entry point. A UI may either represent a browser window 
- * (or tab) or some part of a html page where a Vaadin application is embedded.
- * <p>
- * The UI is initialized using {@link #init(VaadinRequest)}. This method is intended to be 
- * overridden to add component to the user interface and initialize non-component functionality.
- */
 @Push
 @Theme("mytheme")
 public class MyUI extends UI {
     private final static Logger logger = Logger.getLogger(MyUI.class.getName());
 
     private Navigator navigator;
-    private Panel contentPanel;
     private Menu menu;
 
     public static MyUI getInstance() {
@@ -37,11 +28,8 @@ public class MyUI extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-
-        final HorizontalLayout layout = new HorizontalLayout();
-        contentPanel = new Panel();
-        contentPanel.setContent(new Label("asdf"));
-
+        // setup navigator
+        Panel contentPanel = new Panel();
         navigator = new Navigator(this, contentPanel);
         navigator.addView("", Front.class);
         navigator.addView(PoiMap.NAME, PoiMap.class);
@@ -50,22 +38,21 @@ public class MyUI extends UI {
         navigator.addView(Login.NAME, Login.class);
         navigator.setErrorView(ErrorView.class);
 
-
-        layout.setSizeFull();
+        // setup layout - add menu
+        HorizontalLayout layout = new HorizontalLayout();
         menu = new Menu(this);
         layout.addComponent(menu);
 
+        // contentPanel will expand and fill layout
         layout.addComponent(contentPanel);
         contentPanel.setSizeFull();
         layout.setExpandRatio(contentPanel, 1);
 
-        setContent(layout);
+        // rest of layout setup
+        layout.setSizeFull();
         layout.setResponsive(true);
         layout.addStyleName("main");
-    }
-
-    public Navigator getNav() {
-        return navigator;
+        setContent(layout);
     }
 
     public Menu getMenu() {

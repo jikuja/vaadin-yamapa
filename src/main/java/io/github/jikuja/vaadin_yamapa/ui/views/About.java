@@ -4,7 +4,6 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.RichTextArea;
 import org.vaadin.viritin.label.RichText;
 
 public class About extends CssLayout implements View {

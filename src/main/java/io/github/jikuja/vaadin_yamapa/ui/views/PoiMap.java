@@ -59,11 +59,10 @@ public class PoiMap extends CssLayout implements View {
     }
 
     private void setupClickHandlers() {
-        // ContextClickEvent does not provide geographical coordinates
         map.addClickListener(event -> {
             if (event.getSource() == map) {
                 Object iid = items.addItem();
-                PoiForm form = new PoiForm("New POI?", items, iid,
+                PoiForm form = new PoiForm("New POI", items, iid,
                         event.getPoint().getLat(), event.getPoint().getLon());
                 UI.getCurrent().addWindow(form);
             }
@@ -77,8 +76,6 @@ public class PoiMap extends CssLayout implements View {
         locate.addStyleName("locatebutton");
         locate.setIcon(FontAwesome.CROSSHAIRS);
         locate.addStyleName(ValoTheme.BUTTON_LARGE);
-        //locate.setWidth(64, Unit.PIXELS);
-        //locate.setHeight(64, Unit.PIXELS);
         locate.addClickListener(event -> {
             Notification.show("Not supported", "WIP: support will be added later. Meanwhile don't press the button", Notification.Type.ERROR_MESSAGE);
         });
@@ -94,8 +91,6 @@ public class PoiMap extends CssLayout implements View {
     }
 
     private void setupLayers() {
-
-
         // add OSM layer, includes proper attribution
         LTileLayer osm = new LOpenStreetMapLayer();
         map.addBaseLayer(osm, "OSM");
@@ -131,16 +126,19 @@ public class PoiMap extends CssLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
-        deleteMarks();
-        addMarks();
+        updateMarks();
     }
 
+    // Updates markers in the mao
     private void updateMarks() {
-        deleteMarks();
+        deleteMarkers();
         addMarks();
     }
 
-    private void deleteMarks() {
+    /**
+     * Removes markers from the map
+     */
+    private void deleteMarkers() {
         Iterator<Component> it = map.iterator();
         Collection<Component> toRemove = new ArrayList<>();
 
@@ -151,11 +149,12 @@ public class PoiMap extends CssLayout implements View {
             }
         }
 
-        for (Component c: toRemove) {
-            map.removeComponent(c);
-        }
+        toRemove.forEach(map::removeComponent);
     }
 
+    /**
+     * Adds markers to the map
+     */
     private void addMarks() {
         for (Object iid: items.getItemIds()) {
             if (iid instanceof TemporaryRowId) {
@@ -164,9 +163,9 @@ public class PoiMap extends CssLayout implements View {
                 double lon = (Double) item.getItemProperty("LONG").getValue();
 
                 LMarker marker = new LMarker(lat, lon);
-                marker.setTitle("New POI being created here");
                 //TODO: make temporary markers to use different color or find out better icon
                 marker.setIcon(FontAwesome.BRIEFCASE);
+                marker.addStyleName("temp-marker");
                 map.addComponent(marker);
             } else {
                 Item item = items.getItem(iid);

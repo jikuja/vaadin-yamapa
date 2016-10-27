@@ -4,7 +4,6 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.UI;
 import io.github.jikuja.vaadin_yamapa.MyUI;
 import io.github.jikuja.vaadin_yamapa.auth.Auth;
 import io.github.jikuja.vaadin_yamapa.ui.views.About;
@@ -38,7 +37,7 @@ public class Menu extends CssLayout {
         logout.addClickListener(event -> {
             Auth.logout();
             updateButtons();
-            UI.getCurrent().getNavigator().navigateTo(Login.NAME);
+            ui.getNavigator().navigateTo(Login.NAME);
         });
 
         map.setIcon(FontAwesome.MAP);
@@ -48,6 +47,11 @@ public class Menu extends CssLayout {
         about.setIcon(FontAwesome.INFO_CIRCLE);
     }
 
+    /**
+     * Updates buttons visibility.
+     *
+     * Call after login/logout to update buttons
+     */
     public void updateButtons() {
         VaadinSession session = VaadinSession.getCurrent();
         if (session.getAttribute("userid") == null) {
