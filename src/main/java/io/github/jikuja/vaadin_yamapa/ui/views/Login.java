@@ -164,7 +164,12 @@ public class Login extends CssLayout implements View {
 
             //*/
             MyUI.getInstance().getMenu().updateButtons();
-            MyUI.getInstance().getNavigator().navigateTo(PoiMap.NAME);
+            // TODO: QA Don't do this. Login will have no parent anymore
+            // => Rest of the Listener will throw errors!
+            // Espacially OAuthPopupOpener.this.getUI().push(); won't find the UI
+            //MyUI.getInstance().getNavigator().navigateTo(PoiMap.NAME);
+
+;
         }
 
         @Override
