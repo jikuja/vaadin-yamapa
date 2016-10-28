@@ -2,15 +2,13 @@ package io.github.jikuja.vaadin_yamapa.ui.forms;
 
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.PropertyId;
-import com.vaadin.data.util.converter.StringToDoubleConverter;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
+import io.github.jikuja.vaadin_yamapa.ui.converters.AccurateStringToDoubleConverter;
 
 import java.sql.SQLException;
-import java.text.NumberFormat;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -193,16 +191,4 @@ public class PoiForm extends Window {
         fieldGroup.getItemDataSource().getItemProperty("USER_ID").setValue(VaadinSession.getCurrent().getAttribute("userid"));
     }
 
-    /**
-     * Converter from String to Double. Conversion uses 5 decimal precision => 1.1 meters
-     */
-    private static class AccurateStringToDoubleConverter extends StringToDoubleConverter {
-        @Override
-        protected NumberFormat getFormat(Locale locale) {
-            NumberFormat format = super.getFormat(locale);
-            format.setMinimumFractionDigits(5);
-            format.setMaximumFractionDigits(5);
-            return format;
-        }
-    }
 }
