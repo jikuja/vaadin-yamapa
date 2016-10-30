@@ -6,6 +6,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import io.github.jikuja.vaadin_yamapa.database.Containers;
 import io.github.jikuja.vaadin_yamapa.database.Database;
 import io.github.jikuja.vaadin_yamapa.ui.converters.AccurateStringToDoubleConverter;
@@ -91,8 +92,11 @@ public class PoiList extends CssLayout implements View {
 
             Item item = rowReference.getItem();
             Label label = new Label((String)item.getItemProperty("DESCRIPTION").getValue());
+            // TODO: QA: use sizes from the grid
+            label.setWidth(221, Unit.PIXELS);
+            label.setHeight(120, Unit.PIXELS);
+            label.addStyleName("border");
             layout.addComponent(label);
-
 
             if (Objects.equals(VaadinSession.getCurrent().getAttribute("userid"), item.getItemProperty("USER_ID").getValue())) {
                 Button edit = new Button("Edit", event -> {
@@ -108,6 +112,8 @@ public class PoiList extends CssLayout implements View {
                     grid.setEditorEnabled(true);
                     grid.setEditorEnabled(false);
                 });
+                edit.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+                delete.addStyleName(ValoTheme.BUTTON_DANGER);
                 layout.addComponents(edit, delete);
             }
 

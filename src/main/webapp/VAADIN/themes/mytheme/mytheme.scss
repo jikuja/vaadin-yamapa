@@ -58,6 +58,13 @@
     pointer-events: none;
   }
 
+  .main .border {
+    //background: none repeat scroll 0 0 #F5F5F5;
+    border-image: none;
+    border-radius: 3px 3px 3px 3px;
+    border: 1px solid #111111;
+  }
+
   .main .css-menu {
     .v-button {
         display: block;
