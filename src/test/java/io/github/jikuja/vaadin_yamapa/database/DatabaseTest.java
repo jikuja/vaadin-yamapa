@@ -47,7 +47,7 @@ public class DatabaseTest {
         InputStream is = null;
         try {
             // TODO: FIXME
-            is = new FileInputStream("d:/projects/vaadin/vaadin-test-app/src/main/resources/" + s);
+            is = new FileInputStream("src/test/resources/" + s);
         } catch (Exception e) {
             fail(e.toString());
         }
