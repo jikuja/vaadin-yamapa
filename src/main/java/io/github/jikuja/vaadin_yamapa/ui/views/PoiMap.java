@@ -43,7 +43,7 @@ public class PoiMap extends CssLayout implements View {
         setupMap();
         setupLayers();
         setupLocationButton();
-        setupClickHandlers();
+        setupCenterCrossHair();
 
         try {
             items = Containers.getItems(Database.getInstance().getPool());
@@ -58,6 +58,24 @@ public class PoiMap extends CssLayout implements View {
         });
     }
 
+
+
+    private void setupMap() {
+        // sane default zoom
+        VaadinSession session = VaadinSession.getCurrent();
+        if (session.getAttribute("lat") != null) {
+            map.setCenter(new Point((Double)session.getAttribute("lat"), (Double)session.getAttribute("lon")),
+                    14.0);
+        } else {
+            map.setCenter(new Point(60.440963, 22.25122), 14.0);
+        }
+
+        // single click / tapping is used to add POIs
+        // using context meny would be even nicer thing to have. Maybe later
+        map.setDoubleClickZoomEnabled(false);
+        setupClickHandlers();
+    }
+
     private void setupClickHandlers() {
         map.addClickListener(event -> {
             if (event.getSource() == map && VaadinSession.getCurrent().getAttribute("userid") != null) {
@@ -67,27 +85,6 @@ public class PoiMap extends CssLayout implements View {
                 UI.getCurrent().addWindow(form);
             }
         });
-    }
-
-    /*
-     * TODO: QA: how to make square button from font icons
-     */
-    private void setupLocationButton() {
-        locate.addStyleName("locatebutton");
-        locate.setIcon(FontAwesome.CROSSHAIRS);
-        locate.addStyleName(ValoTheme.BUTTON_LARGE);
-        locate.addClickListener(event -> {
-            Notification.show("Not supported", "WIP: support will be added later. Meanwhile don't press the button", Notification.Type.ERROR_MESSAGE);
-        });
-    }
-
-    private void setupMap() {
-        // sane default zoom
-        map.setCenter(new Point(60.440963, 22.25122), 14.0);
-
-        // single click / tapping is used to add POIs
-        // using context meny would be even nicer thing to have. Maybe later
-        map.setDoubleClickZoomEnabled(false);
     }
 
     private void setupLayers() {
@@ -124,6 +121,31 @@ public class PoiMap extends CssLayout implements View {
         map.addControl(scale);
     }
 
+    private void setupLocationButton() {
+        locate.addStyleName("locatebutton");
+        locate.setIcon(FontAwesome.CROSSHAIRS);
+        locate.addStyleName(ValoTheme.BUTTON_LARGE);
+        locate.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        locate.addClickListener(event -> {
+            Notification.show("Attention",
+                    "No real geolocation support. Map center is used as coordinates",
+                    Notification.Type.HUMANIZED_MESSAGE);
+
+            VaadinSession session = VaadinSession.getCurrent();
+            session.setAttribute("lat", map.getCenter().getLat());
+            session.setAttribute("lon", map.getCenter().getLon());
+        });
+    }
+
+    private void setupCenterCrossHair() {
+        Button helper = new Button();
+        helper.addStyleName("helper");
+        helper.setIcon(FontAwesome.CROSSHAIRS);
+        helper.addStyleName(ValoTheme.BUTTON_BORDERLESS);
+        helper.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        addComponent(helper);
+    }
+
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         updateMarks();
@@ -157,16 +179,17 @@ public class PoiMap extends CssLayout implements View {
      */
     private void addMarks() {
         for (Object iid: items.getItemIds()) {
+            // new marker being added by someone
             if (iid instanceof TemporaryRowId) {
                 Item item = items.getItem(iid);
                 double lat = (Double) item.getItemProperty("LAT").getValue();
                 double lon = (Double) item.getItemProperty("LONG").getValue();
 
                 LMarker marker = new LMarker(lat, lon);
-                //TODO: make temporary markers to use different color or find out better icon
-                marker.setIcon(FontAwesome.BRIEFCASE);
+                marker.setIcon(FontAwesome.PLUS_CIRCLE);
                 marker.addStyleName("temp-marker");
                 map.addComponent(marker);
+            // persistent / saved markers
             } else {
                 Item item = items.getItem(iid);
                 double lat = (Double) item.getItemProperty("LAT").getValue();
