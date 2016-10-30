@@ -16,6 +16,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import io.github.jikuja.vaadin_yamapa.MyUI;
 import io.github.jikuja.vaadin_yamapa.auth.Auth;
 import io.github.jikuja.vaadin_yamapa.database.Containers;
@@ -61,6 +62,7 @@ public class Login extends CssLayout implements View {
 
     private void setupButtons() {
         login.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        login.addStyleName(ValoTheme.BUTTON_PRIMARY);
         login.addClickListener(event -> {
             if ( Auth.login(username.getValue(), password.getValue()) ) {
                 Notification.show("Valid Credentials", null, Notification.Type.HUMANIZED_MESSAGE);

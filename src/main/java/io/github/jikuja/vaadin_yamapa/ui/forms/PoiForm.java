@@ -6,6 +6,7 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import io.github.jikuja.vaadin_yamapa.ui.converters.AccurateStringToDoubleConverter;
 
 import java.sql.SQLException;
@@ -44,6 +45,10 @@ public class PoiForm extends Window {
         setupWindow();
         setupForm();
         setupButtonHandlers();
+
+        addCloseListener(e -> {
+            closeForm();
+        });
     }
 
     /**
@@ -71,7 +76,6 @@ public class PoiForm extends Window {
             layout.setReadOnly(true);
             layout.setEnabled(false);
             buttons.setVisible(false);
-            setClosable(true);
         }
     }
 
@@ -101,7 +105,6 @@ public class PoiForm extends Window {
         center();
         setModal(true);
         setResizable(false);
-        setClosable(false);
         setContent(layout);
     }
 
@@ -136,6 +139,8 @@ public class PoiForm extends Window {
         title.focus();
 
         // buttons
+        save.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        delete.addStyleName(ValoTheme.BUTTON_DANGER);
         buttons.addComponents(save, cancel, delete);
         delete.setVisible(false);   // not shown by default
         layout.addComponent(buttons);
@@ -157,17 +162,7 @@ public class PoiForm extends Window {
         });
         save.setClickShortcut(ShortcutAction.KeyCode.ENTER, ShortcutAction.ModifierKey.CTRL);
         
-        cancel.addClickListener(event -> {
-            fieldGroup.discard();
-            try {
-                container.rollback();
-            } catch (SQLException e) {
-                logger.log(Level.SEVERE, "failed: ", e);
-            }
-            close();
-        });
-
-        // BUG? This does not work, why?
+        cancel.addClickListener(event -> closeForm());
         cancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 
         delete.addClickListener(event -> {
@@ -179,6 +174,16 @@ public class PoiForm extends Window {
             }
             close();
         });
+    }
+
+    private void closeForm() {
+        fieldGroup.discard();
+        try {
+            container.rollback();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "failed: ", e);
+        }
+        close();
     }
 
     @SuppressWarnings("unchecked") // Double to Double
