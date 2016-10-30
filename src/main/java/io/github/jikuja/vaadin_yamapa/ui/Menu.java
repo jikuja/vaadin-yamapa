@@ -12,6 +12,7 @@ import io.github.jikuja.vaadin_yamapa.ui.views.PoiList;
 import io.github.jikuja.vaadin_yamapa.ui.views.PoiMap;
 
 public class Menu extends CssLayout {
+    private Button home = new Button("Home");
     private Button map = new Button("Map");
     private Button list = new Button("List");
     private Button login = new Button("Login");
@@ -23,13 +24,14 @@ public class Menu extends CssLayout {
         this.ui = ui;
         addStyleName("css-menu");
         setHeight(100, Unit.PERCENTAGE);
-        addComponents(map, list, login, logout, about);
 
         setupButtons();
         updateButtons();
     }
 
     private void setupButtons() {
+        addComponents(home, map, list, login, logout, about);
+        home.addClickListener(event -> ui.getNavigator().navigateTo(""));
         map.addClickListener(event -> ui.getNavigator().navigateTo(PoiMap.NAME));
         list.addClickListener(event -> ui.getNavigator().navigateTo(PoiList.NAME));
         about.addClickListener(event -> ui.getNavigator().navigateTo(About.NAME));
@@ -40,17 +42,25 @@ public class Menu extends CssLayout {
             ui.getNavigator().navigateTo(Login.NAME);
         });
 
+        home.setIcon(FontAwesome.HOME);
+        home.setDescription("Front page");
         map.setIcon(FontAwesome.MAP);
+        map.setDescription("Map view of POIs");
         list.setIcon(FontAwesome.LIST);
+        list.setDescription("List view of POIs");
         login.setIcon(FontAwesome.SIGN_IN);
+        login.setDescription("Login area");
         logout.setIcon(FontAwesome.SIGN_OUT);
+        logout.setDescription("Logout current user");
         about.setIcon(FontAwesome.INFO_CIRCLE);
+        about.setDescription("About the project");
     }
 
     /**
-     * Updates buttons visibility.
+     * Update visibility of buttons.
      *
-     * Call after login/logout to update buttons
+     * Usualla called cafter user logs in or logs out
+     *
      */
     public void updateButtons() {
         VaadinSession session = VaadinSession.getCurrent();

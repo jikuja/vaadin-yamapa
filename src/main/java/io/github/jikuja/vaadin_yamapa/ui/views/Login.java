@@ -24,6 +24,7 @@ import org.vaadin.addon.oauthpopup.OAuthPopupButton;
 import org.vaadin.addon.oauthpopup.buttons.GoogleButton;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,20 +64,25 @@ public class Login extends CssLayout implements View {
 
     private void addGoogleButton() {
         JsonNode json;
-        try {
-            json = new ObjectMapper().readTree(getClass().getResource("/client_secret.json"));
-        } catch (IOException e) {
-            logger.log(Level.WARNING, "Failed to read client_secrets.json", e);
-            return;
+        URL resource = getClass().getResource("/client_secret.json");
+        if (resource != null) {
+            try {
+                json = new ObjectMapper().readTree(resource);
+            } catch (IOException e) {
+                logger.log(Level.WARNING, "Failed to read client_secrets.json", e);
+                return;
+            }
+            String apiKey = json.get("web").get("client_id").asText();
+            String apiSecret = json.get("web").get("client_secret").asText();
+
+
+            googleButton = new GoogleButton(apiKey, apiSecret, "https://www.googleapis.com/auth/plus.login");
+            googleButton.setPopupWindowFeatures("resizable,width=400,height=300");
+            googleButton.addOAuthListener(new Listener(apiKey, apiSecret));
+            layout.addComponent(googleButton);
+        } else {
+            layout.addComponent(new Label("Google oath disabled for this instance"));
         }
-        String apiKey = json.get("web").get("client_id").asText();
-        String apiSecret = json.get("web").get("client_secret").asText();
-
-
-        googleButton = new GoogleButton(apiKey, apiSecret, "https://www.googleapis.com/auth/plus.login");
-        googleButton.setPopupWindowFeatures("resizable,width=400,height=300");
-        googleButton.addOAuthListener(new Listener(apiKey, apiSecret));
-        layout.addComponent(googleButton);
     }
 
     @Override
