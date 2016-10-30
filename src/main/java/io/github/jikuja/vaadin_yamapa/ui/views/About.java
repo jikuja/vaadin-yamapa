@@ -10,8 +10,9 @@ public class About extends CssLayout implements View {
     public static final String NAME = "about";
 
     public About() {
+        Label licenses = new RichText().withSafeHtmlResource("/licenses.html");
         Label about = new RichText().withMarkDownResource("/ABOUT.md");
-        addComponent(about);
+        addComponents(about, licenses);
     }
 
     @Override

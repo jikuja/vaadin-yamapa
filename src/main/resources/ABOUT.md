@@ -1,11 +1,15 @@
-# Dependencies
+# Main dependencies
 
 * Vaadin
-* Leaflet Addon
+* V-Leaflet
+* OAuth2 Popup Add-on
 * Viritin
 * HyperSQL
+* ScribeJava
+
 
 # Testing dependencies
 
 * JUnit
 * Powermock
+
