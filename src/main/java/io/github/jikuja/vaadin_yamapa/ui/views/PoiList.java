@@ -1,6 +1,7 @@
 package io.github.jikuja.vaadin_yamapa.ui.views;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -76,6 +77,28 @@ public class PoiList extends CssLayout implements View {
             Object id = event.getItemId();
             grid.setDetailsVisible(id, !grid.isDetailsVisible(id));
         });
+
+        Grid.HeaderRow filters = grid.appendHeaderRow();
+
+        for (Object pid: grid.getContainerDataSource().getContainerPropertyIds()) {
+            if (Objects.equals(pid, "TITLE") || Objects.equals(pid, "NAME")) {
+                Grid.HeaderCell cell = filters.getCell(pid);
+
+                TextField filterText = new TextField();
+                // TODO: fill fully fill headers. Requires CSS changes
+                //filterText.setColumns(12);
+                filterText.setWidth(100, Unit.PERCENTAGE);
+
+                filterText.addTextChangeListener(change -> {
+                    container.removeContainerFilters(pid);
+                    if (!change.getText().isEmpty())
+                        container.addContainerFilter(
+                                new SimpleStringFilter(pid, change.getText(), true, false));
+                });
+                cell.setStyleName("grid-filter");
+                cell.setComponent(filterText);
+            }
+        }
 
         addComponent(grid);
     }

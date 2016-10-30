@@ -52,7 +52,7 @@ public  class ItemsUsersDelegate implements FreeformStatementDelegate {
     @Override
     public StatementHelper getCountStatement() throws UnsupportedOperationException {
         StatementHelper statementHelper = new StatementHelper();
-        StringBuilder sb = new StringBuilder("SELECT COUNT(*) FROM items");
+        StringBuilder sb = new StringBuilder("SELECT COUNT(*) FROM items i LEFT JOIN users u ON i.USER_ID=u.ID");
 
         if (filters != null) {
             sb.append(QueryBuilder.getWhereStringForFilters(filters, statementHelper));
