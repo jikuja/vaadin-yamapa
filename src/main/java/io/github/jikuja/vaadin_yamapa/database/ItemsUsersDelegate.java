@@ -99,7 +99,7 @@ public  class ItemsUsersDelegate implements FreeformStatementDelegate {
         PreparedStatement statement = null;
         if (row.getId() instanceof TemporaryRowId) {
             // insert
-            statement = conn.prepareStatement("INSERT INTO ITEMS VALUES ?, ?, ?, ?, ?");
+            statement = conn.prepareStatement("INSERT INTO ITEMS (TITLE, DESCRIPTION, USER_ID, LAT, LONG) VALUES (?, ?, ?, ?, ?)");
             setRowValues(statement, row);
         } else {
             // update

@@ -11,6 +11,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.And;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.VaadinSession;
@@ -43,6 +44,7 @@ public class Login extends CssLayout implements View {
 
     public Login() {
         layout.addComponents(username, password, login);
+        username.focus();
         setupButtons();
 
         layout.addComponent(new Label("Or use one of the external services:"));
@@ -51,6 +53,7 @@ public class Login extends CssLayout implements View {
     }
 
     private void setupButtons() {
+        login.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         login.addClickListener(event -> {
             if ( Auth.login(username.getValue(), password.getValue()) ) {
                 Notification.show("Valid Credentials", null, Notification.Type.HUMANIZED_MESSAGE);

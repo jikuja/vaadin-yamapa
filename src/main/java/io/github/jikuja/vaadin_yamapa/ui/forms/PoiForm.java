@@ -155,6 +155,7 @@ public class PoiForm extends Window {
             }
             close();
         });
+        save.setClickShortcut(ShortcutAction.KeyCode.ENTER, ShortcutAction.ModifierKey.CTRL);
         
         cancel.addClickListener(event -> {
             fieldGroup.discard();

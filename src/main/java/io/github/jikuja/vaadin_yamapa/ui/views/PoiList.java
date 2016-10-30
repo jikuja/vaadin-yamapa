@@ -17,10 +17,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PoiList extends CssLayout implements View {
-    private static Logger logger = Logger.getLogger(PoiList.class.getName());
+    private static final Logger logger = Logger.getLogger(PoiList.class.getName());
     public static final String NAME = "list";
 
-    private SQLContainer container;
+    public SQLContainer getContainer() {
+        return container;
+    }
+
+    private final SQLContainer container;
     private final Grid grid;
 
     public PoiList() {
@@ -31,16 +35,17 @@ public class PoiList extends CssLayout implements View {
         }
 
         grid = new Grid(container);
-
-        addComponent(grid);
-
-        // TODO: make responsive
-        grid.setWidth(700, Unit.PIXELS);
-        grid.setHeight(500, Unit.PIXELS);
         setupGrid();
+
+        setSizeFull();
     }
 
     private void setupGrid() {
+        // Does not look good but better then default which is
+        // 10 rows.
+        grid.setSizeFull();
+
+
         // setup grid headers
         grid.getColumn("ID").setHidden(true);
         grid.getColumn("TITLE").setHeaderCaption("Title");
@@ -70,6 +75,8 @@ public class PoiList extends CssLayout implements View {
             Object id = event.getItemId();
             grid.setDetailsVisible(id, !grid.isDetailsVisible(id));
         });
+
+        addComponent(grid);
     }
 
     @Override

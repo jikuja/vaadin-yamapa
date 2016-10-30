@@ -9,6 +9,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import io.github.jikuja.vaadin_yamapa.MyUI;
 import io.github.jikuja.vaadin_yamapa.database.Containers;
 import io.github.jikuja.vaadin_yamapa.database.Database;
 import io.github.jikuja.vaadin_yamapa.ui.forms.PoiForm;
@@ -30,6 +31,10 @@ public class PoiMap extends CssLayout implements View {
     public static final String NAME = "map";
     private final LMap map = new LMap();
     private final Button locate = new Button("");
+
+    public SQLContainer getItems() {
+        return items;
+    }
 
     private SQLContainer items;
     private SQLContainer users;
@@ -134,6 +139,7 @@ public class PoiMap extends CssLayout implements View {
             VaadinSession session = VaadinSession.getCurrent();
             session.setAttribute("lat", map.getCenter().getLat());
             session.setAttribute("lon", map.getCenter().getLon());
+            MyUI.getInstance().getMenu().updateButtons();
         });
     }
 
@@ -151,7 +157,7 @@ public class PoiMap extends CssLayout implements View {
         updateMarks();
     }
 
-    // Updates markers in the mao
+    // Updates markers in the map
     private void updateMarks() {
         deleteMarkers();
         addMarks();
