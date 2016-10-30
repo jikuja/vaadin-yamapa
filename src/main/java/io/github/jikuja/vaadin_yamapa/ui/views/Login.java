@@ -22,7 +22,9 @@ import io.github.jikuja.vaadin_yamapa.database.Containers;
 import io.github.jikuja.vaadin_yamapa.database.Database;
 import org.vaadin.addon.oauthpopup.OAuthListener;
 import org.vaadin.addon.oauthpopup.OAuthPopupButton;
+import org.vaadin.addon.oauthpopup.buttons.FacebookButton;
 import org.vaadin.addon.oauthpopup.buttons.GoogleButton;
+import org.vaadin.addon.oauthpopup.buttons.TwitterButton;
 
 import java.io.IOException;
 import java.net.URL;
@@ -41,6 +43,9 @@ public class Login extends CssLayout implements View {
     private final Button login = new Button("Login");
 
     private OAuthPopupButton googleButton;
+    private OAuthPopupButton twitterButton;
+    private OAuthPopupButton facebookButton;
+
 
     public Login() {
         layout.addComponents(username, password, login);
@@ -49,6 +54,8 @@ public class Login extends CssLayout implements View {
 
         layout.addComponent(new Label("Or use one of the external services:"));
         addGoogleButton();
+        addTwitterButton();
+        addFacebookButton();
         addComponent(layout);
     }
 
@@ -84,8 +91,25 @@ public class Login extends CssLayout implements View {
             googleButton.addOAuthListener(new Listener(apiKey, apiSecret));
             layout.addComponent(googleButton);
         } else {
-            layout.addComponent(new Label("Google oath disabled for this instance"));
+            googleButton = new GoogleButton(null, null, null);
+            googleButton.setEnabled(false);
+            googleButton.setDescription("Disabled feature :(");
+            layout.addComponent(googleButton);
         }
+    }
+
+    private void addTwitterButton() {
+        twitterButton = new TwitterButton(null, null);
+        twitterButton.setEnabled(false);
+        twitterButton.setDescription("Disabled feature :(");
+        layout.addComponent(twitterButton);
+    }
+
+    private void addFacebookButton() {
+        facebookButton = new FacebookButton(null, null);
+        facebookButton.setEnabled(false);
+        facebookButton.setDescription("Disabled feature :(");
+        layout.addComponent(facebookButton);
     }
 
     @Override
