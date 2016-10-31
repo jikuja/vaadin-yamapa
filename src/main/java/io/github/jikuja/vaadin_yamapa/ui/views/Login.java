@@ -15,12 +15,14 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import io.github.jikuja.vaadin_yamapa.MyUI;
 import io.github.jikuja.vaadin_yamapa.auth.Auth;
 import io.github.jikuja.vaadin_yamapa.database.Containers;
 import io.github.jikuja.vaadin_yamapa.database.Database;
+import io.github.jikuja.vaadin_yamapa.ui.Hr;
 import org.vaadin.addon.oauthpopup.OAuthListener;
 import org.vaadin.addon.oauthpopup.OAuthPopupButton;
 import org.vaadin.addon.oauthpopup.buttons.FacebookButton;
@@ -38,6 +40,7 @@ public class Login extends CssLayout implements View {
     public static final String NAME =  "login";
 
     private final FormLayout layout = new FormLayout();
+    private final VerticalLayout buttons = new VerticalLayout();
 
     private final TextField username = new TextField("Username");
     private final PasswordField password = new PasswordField("Password");
@@ -49,16 +52,17 @@ public class Login extends CssLayout implements View {
 
 
     public Login() {
-        layout.addComponents(username, password, login);
         username.focus();
-        setupButtons();
-
-        layout.addComponent(new Label("Or use one of the external services:"));
-        addGoogleButton();
-        addTwitterButton();
-        addFacebookButton();
+        layout.addComponents(username, password, login);
+        layout.setMargin(true);
+        layout.addStyleName("border");
+        layout.setSizeUndefined();
         addComponent(layout);
+        setupButtons();
+        setupOAuthButton();
     }
+
+
 
     private void setupButtons() {
         login.setClickShortcut(ShortcutAction.KeyCode.ENTER);
@@ -72,6 +76,18 @@ public class Login extends CssLayout implements View {
                 Notification.show("Invalid Credentials", null, Notification.Type.ERROR_MESSAGE);
             }
         });
+    }
+
+    private void setupOAuthButton() {
+        Label extText = new Label("<p></p>Or use one of the external services:", ContentMode.HTML);
+        addComponent(extText);
+        addComponent(buttons);
+        buttons.setSizeUndefined();
+        buttons.setSpacing(true);
+        buttons.setMargin(true);
+        addGoogleButton();
+        addTwitterButton();
+        addFacebookButton();
     }
 
     private void addGoogleButton() {
@@ -91,12 +107,12 @@ public class Login extends CssLayout implements View {
             googleButton = new GoogleButton(apiKey, apiSecret, "https://www.googleapis.com/auth/plus.login");
             googleButton.setPopupWindowFeatures("resizable,width=400,height=300");
             googleButton.addOAuthListener(new Listener(apiKey, apiSecret));
-            layout.addComponent(googleButton);
+            buttons.addComponent(googleButton);
         } else {
             googleButton = new GoogleButton(null, null, null);
             googleButton.setEnabled(false);
             googleButton.setDescription("Disabled feature :(");
-            layout.addComponent(googleButton);
+            buttons.addComponent(googleButton);
         }
     }
 
@@ -104,14 +120,14 @@ public class Login extends CssLayout implements View {
         twitterButton = new TwitterButton(null, null);
         twitterButton.setEnabled(false);
         twitterButton.setDescription("Disabled feature :(");
-        layout.addComponent(twitterButton);
+        buttons.addComponent(twitterButton);
     }
 
     private void addFacebookButton() {
         facebookButton = new FacebookButton(null, null);
         facebookButton.setEnabled(false);
         facebookButton.setDescription("Disabled feature :(");
-        layout.addComponent(facebookButton);
+        buttons.addComponent(facebookButton);
     }
 
     @Override
