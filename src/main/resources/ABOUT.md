@@ -13,3 +13,6 @@
 * JUnit
 * Powermock
 
+# Maven Site
+
+Maven site from project is available in [https://jikuja.kapsi.fi/yamapa/site/](https://jikuja.kapsi.fi/yamapa/site/)
