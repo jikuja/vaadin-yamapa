@@ -1,5 +1,8 @@
 package io.github.jikuja.vaadin_yamapa.ui.views;
 
+import com.vaadin.addon.touchkit.extensions.Geolocator;
+import com.vaadin.addon.touchkit.extensions.PositionCallback;
+import com.vaadin.addon.touchkit.gwt.client.vcom.Position;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.TemporaryRowId;
@@ -132,15 +135,9 @@ public class PoiMap extends CssLayout implements View {
         locate.addStyleName(ValoTheme.BUTTON_LARGE);
         locate.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
         locate.setDescription("Locate me");
+        locate.setDisableOnClick(true);
         locate.addClickListener(event -> {
-            Notification.show("Attention",
-                    "No real geolocation support. Map center is used as coordinates",
-                    Notification.Type.HUMANIZED_MESSAGE);
-
-            VaadinSession session = VaadinSession.getCurrent();
-            session.setAttribute("lat", map.getCenter().getLat());
-            session.setAttribute("lon", map.getCenter().getLon());
-            MyUI.getInstance().getMenu().updateButtons();
+            Geolocator.detect(new MyPositionCallback());
         });
     }
 
@@ -214,6 +211,23 @@ public class PoiMap extends CssLayout implements View {
                 });
                 map.addComponent(marker);
             }
+        }
+    }
+
+    private class MyPositionCallback implements PositionCallback {
+        @Override
+        public void onSuccess(Position position) {
+            VaadinSession session = VaadinSession.getCurrent();
+            session.setAttribute("lat", position.getLatitude());
+            session.setAttribute("lon", position.getLongitude());
+            // is .access() required here?
+            UI.getCurrent().access( () -> MyUI.getInstance().getMenu().updateButtons());
+            locate.setEnabled(true);
+        }
+
+        @Override
+        public void onFailure(int errorCode) {
+            logger.warning("Geolocation failed: " + errorCode);
         }
     }
 }
