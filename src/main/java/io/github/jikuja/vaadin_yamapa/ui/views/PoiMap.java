@@ -131,6 +131,7 @@ public class PoiMap extends CssLayout implements View {
         locate.setIcon(FontAwesome.CROSSHAIRS);
         locate.addStyleName(ValoTheme.BUTTON_LARGE);
         locate.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        locate.setDescription("Locate me");
         locate.addClickListener(event -> {
             Notification.show("Attention",
                     "No real geolocation support. Map center is used as coordinates",
