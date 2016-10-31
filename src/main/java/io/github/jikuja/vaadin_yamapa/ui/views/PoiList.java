@@ -47,9 +47,9 @@ public class PoiList extends CssLayout implements View {
         // 10 rows.
         grid.setSizeFull();
 
+        grid.setColumns("TITLE", "LAT", "LONG", "NAME");
 
         // setup grid headers
-        grid.getColumn("ID").setHidden(true);
         grid.getColumn("TITLE").setHeaderCaption("Title");
         grid.getColumn("LAT").setHeaderCaption("Latitude");
         grid.getColumn("LONG").setHeaderCaption("Longitude");
@@ -58,15 +58,6 @@ public class PoiList extends CssLayout implements View {
         // setup converters for coordinates
         grid.getColumn("LAT").setConverter(new AccurateStringToDoubleConverter());
         grid.getColumn("LONG").setConverter(new AccurateStringToDoubleConverter());
-
-        // hide some columns
-        grid.getColumn("DESCRIPTION").setHidden(true);
-        grid.getColumn("OPTLOCK").setHidden(true);
-        grid.getColumn("USER_ID").setHidden(true);
-        grid.getColumn("OAUTH").setHidden(true);
-        grid.getColumn("PASSWORD").setHidden(true); //TODO: does this leak pass words to client?
-        // probably better to exclude password field from requests
-        grid.getColumn("EXTERNAL_ID").setHidden(true);
 
         // setup grid details
         grid.setDetailsGenerator(new PoiDetailsGenerator());
