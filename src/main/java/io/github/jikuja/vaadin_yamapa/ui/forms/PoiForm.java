@@ -15,8 +15,9 @@ import java.util.logging.Logger;
 
 public class PoiForm extends Window {
     private final static Logger logger = Logger.getLogger(FormLayout.class.getName());
+    private final VerticalLayout main = new VerticalLayout();
     private final FormLayout layout = new FormLayout();
-    private final CssLayout buttons = new CssLayout();
+    private final HorizontalLayout buttons = new HorizontalLayout();
     
     @PropertyId("TITLE")
     private final TextField title = new TextField("Title");
@@ -105,7 +106,8 @@ public class PoiForm extends Window {
         center();
         setModal(true);
         setResizable(false);
-        setContent(layout);
+        main.addComponent(layout);
+        setContent(main);
     }
 
     /**
@@ -141,9 +143,17 @@ public class PoiForm extends Window {
         // buttons
         save.addStyleName(ValoTheme.BUTTON_PRIMARY);
         delete.addStyleName(ValoTheme.BUTTON_DANGER);
-        buttons.addComponents(save, cancel, delete);
+        Button hack = new Button();
+        hack.addStyleName(ValoTheme.BUTTON_BORDERLESS);
+        buttons.addComponents(delete, hack, cancel, save);
+        buttons.setExpandRatio(hack, 1);
+        buttons.setComponentAlignment(delete, Alignment.MIDDLE_LEFT);
+        buttons.setComponentAlignment(cancel, Alignment.MIDDLE_RIGHT);
+        buttons.setComponentAlignment(save, Alignment.MIDDLE_RIGHT);
+        buttons.setWidth(100, Unit.PERCENTAGE);
+        buttons.setMargin(true);
         delete.setVisible(false);   // not shown by default
-        layout.addComponent(buttons);
+        main.addComponent(buttons);
     }
 
     /**
