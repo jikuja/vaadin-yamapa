@@ -4,9 +4,11 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import io.github.jikuja.vaadin_yamapa.MyUI;
 import io.github.jikuja.vaadin_yamapa.ui.converters.AccurateStringToDoubleConverter;
 
 import java.sql.SQLException;
@@ -35,6 +37,7 @@ public class PoiForm extends Window {
     private final FieldGroup fieldGroup = new FieldGroup();
     private SQLContainer container;
     private Object itemId;
+    private Boolean mobile = ((MyUI) UI.getCurrent()).isMobile();
 
 
     /**
@@ -102,9 +105,16 @@ public class PoiForm extends Window {
      * Setup Window related settings. (Top component of the class)
      */
     private void setupWindow() {
-        setSizeUndefined();
-        center();
-        setModal(true);
+        // this setup really requires Responsive Window and FormLayout
+        // weird things happens if orientation is changed while window is opened
+        if (Page.getCurrent().getBrowserWindowWidth() < 600) {
+            setSizeFull();
+        } else {
+            setSizeUndefined();
+            center();
+            setModal(true);
+
+        }
         setResizable(false);
         main.addComponent(layout);
         setContent(main);
@@ -129,7 +139,7 @@ public class PoiForm extends Window {
         title.setInputPrompt("Add Title");
         description.setInputPrompt("Add description");
         lat.setInputPrompt("Add latitude");
-        lon.setInputPrompt("Add lognitude");
+        lon.setInputPrompt("Add longitude");
 
         // setup converters for fields
         lat.setConverter(new AccurateStringToDoubleConverter());
@@ -141,6 +151,8 @@ public class PoiForm extends Window {
         title.focus();
 
         // buttons
+        // button placement is not optimal. Would be great
+        // if FormLayout allows adding component as full row
         save.addStyleName(ValoTheme.BUTTON_PRIMARY);
         delete.addStyleName(ValoTheme.BUTTON_DANGER);
         Button hack = new Button();

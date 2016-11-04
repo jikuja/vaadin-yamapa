@@ -39,7 +39,7 @@ public class Login extends CssLayout implements View {
     private static final Logger logger = Logger.getLogger(Login.class.getName());
     public static final String NAME =  "login";
 
-    private final FormLayout layout = new FormLayout();
+    private final VerticalLayout layout = new VerticalLayout();
     private final VerticalLayout buttons = new VerticalLayout();
 
     private final TextField username = new TextField("Username");
@@ -55,7 +55,8 @@ public class Login extends CssLayout implements View {
         username.focus();
         layout.addComponents(username, password, login);
         layout.setMargin(true);
-        layout.addStyleName("border");
+        //layout.addStyleName("border");
+        //layout.addStyleName("loginform");
         layout.setSizeUndefined();
         addComponent(layout);
         setupButtons();
