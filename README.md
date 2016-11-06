@@ -1,7 +1,9 @@
 yamapa
 ==============
 
-Course assignment for TUCS course "Development of Modern Web Applications (with Vaadin)" fall 2016
+Course assignment for TUCS course "Development of Modern Web Applications (with Vaadin)" fall 2016.
+
+More information available in http://dy.fi/iagw
 
 Description
 --------------
